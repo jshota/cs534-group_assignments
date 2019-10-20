@@ -12,6 +12,7 @@ def training_plot():
             y.append(float(row[1]))
 
     plt.plot(x,y)
+    plt.xscale('log')
     plt.xlabel('Iteration Times')
     plt.ylabel('SSE')
     plt.title('SSE Curve - Training')
@@ -28,6 +29,7 @@ def validation_plot():
             y.append(float(row[1]))
 
     plt.plot(x,y)
+    plt.xscale('log')
     plt.xlabel('Iteration Times')
     plt.ylabel('SSE')
     plt.title('SSE Curve - Validation')
