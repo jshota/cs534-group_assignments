@@ -1,8 +1,5 @@
-import datetime
-import time
 import numpy as np
 import helper as hp
-import matplotlib.pyplot as plt
 from numpy import linalg as la
 
 class LinearRegression:
