@@ -96,7 +96,7 @@ class LinearRegression:
 learning_rate   = 10 ** (-5)
 converge_point  = 0.5
 iter_limit      = 1000000
-reg_para        = 0.0
+reg_para        = 10.0 ** (2)
 is_validate     = True
 is_normalize    = True
 training_file   = 'PA1_train.csv'
