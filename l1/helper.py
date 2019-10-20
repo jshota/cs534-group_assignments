@@ -12,7 +12,7 @@ def normalize(matrix):
                             (xmaxs[i] - xmins[i])
     return matrix
 
-def import_data(file_directory):
+def import_data(file_directory, is_normalize):
     x, y = [], []
     today = datetime.datetime.now()
     head = True
@@ -50,5 +50,7 @@ def import_data(file_directory):
                     features.append(float(separate_line[i]))
             x.append(features)
 
-        #return [normalize(x), y]
-        return [x, y]
+        if is_normalize:
+            return [normalize(x), y]
+        else:
+            return [x, y]
