@@ -118,6 +118,7 @@ def average_perceptron(l_xs, l_y, v_x, v_y, iters=15):
 
 def kernel_function(x, y, p):
     '''
+    Gram Matrix
     return a matrix as
     K = [k(x1,x1) k(x1, x2) ... k(x1,xn)
          k(x2,x1) k(x2, x2) ... k(x2,xn)
@@ -127,29 +128,40 @@ def kernel_function(x, y, p):
     return np.power((np.matmul(x, y.T) + 1), p)
 
 def k_predict(gram_matrix, alpha, l_y):
-    '''#   Gram Matrix'''
-    cases = len(l_y)
+    return np.sign(np.matmul(gram_matrix, np.multiply(alpha, l_y)))
+        
+def k_accurace(y_hat, correct_label):
+    cases = len(correct_label)
     correct = 0
-    y_hat = np.sign(np.matmul(gram_matrix, np.multiply(alpha, l_y)))
     for i in range(cases):
-        if y_hat[i] == l_y[i]:
+        if y_hat[i] == correct_label[i]:
             correct += 1
-    return correct / cases, y_hat
+    return correct / cases
 
 
 def kernel_perceptron(l_xs, l_y, v_x, v_y, p, iters=15):
     N = len(l_xs)
     alpha = np.zeros(N)
-    accuracies = []
+    accuracies, l_acc, v_acc = [], [], []
     gram_matrix = kernel_function(l_xs, l_xs, p)
+    #gram_matrix_v = kernel_function(l_xs, v_x, p)
+    
+    #print(len(gram_matrix))
     
     for iter in range(iters):
         for i in range(N):
-            u = np.dot(np.multiply(alpha, gram_matrix[i]), l_y)
+            u = np.sign(np.dot(gram_matrix[i], np.multiply(alpha, l_y)))
             if l_y[i] * u <= 0:
                 alpha[i] += 1
-        acc, prediction = k_predict(gram_matrix, alpha, l_y)
-        accuracies.append(acc)
+
+        '''        
+        prediction = k_predict(gram_matrix, alpha, l_y)
+        l_acc.append(k_accurace(prediction, l_y))
+        #accuracies.append(l_acc)
+        '''
+        prediction = k_predict(kernel_function(v_x, l_xs, p), alpha, l_y)
+        if v_y is not None:
+            accuracies.append(k_accurace(prediction, v_y))
     return alpha, accuracies, prediction
 
 if __name__ == "__main__":
@@ -158,14 +170,15 @@ if __name__ == "__main__":
     v_features, v_label = load_data("pa2_valid.csv")
     t_features, t_label = load_data("pa2_test_no_label.csv", False)
 
-    all_accuracies = []
+    l_accs, v_accs, all_accuracies = [], [], []
+        
     #1 online perceptron
     v_w, v_acc, v_pred = online_perceptron(l_features, l_label, v_features, v_label)
     l_w, l_acc, l_pred = online_perceptron(l_features, l_label, l_features, l_label)
     all_accuracies.append(v_acc)
     all_accuracies.append(l_acc)
     t_w, t_acc, t_pred = online_perceptron(l_features, l_label, t_features, t_label, 14)
-    pd.DataFrame(t_pred).to_csv("oplabel.csv", sep=',', header = False, index = False)
+    pd.DataFrame(t_pred).to_csv("oplabel.csv", header = False, index = False)
 
     #2 average perceptron
     v_w, v_acc, v_pred = average_perceptron(l_features, l_label, v_features, v_label)
@@ -173,10 +186,19 @@ if __name__ == "__main__":
     all_accuracies.append(v_acc)
     all_accuracies.append(l_acc)
     t_w, t_acc, t_pred = average_perceptron(l_features, l_label, t_features, t_label)
-    pd.DataFrame(t_pred).to_csv("aplabel.csv", sep=',', header = False, index = False)
-    pd.DataFrame(all_accuracies).to_csv("accuracies.csv", sep=',')
-   
-    #3 
-    #alpha, k_acc, k_pred = kernel_perceptron(t_features, t_label, v_features, v_label, 1)
-    #print(acc)
+    pd.DataFrame(t_pred).to_csv("aplabel.csv", header = False, index = False)
+    pd.DataFrame(all_accuracies).to_csv("accuracies.csv")
     
+   
+    #3 poly-kernel
+    
+    for i in range(5):
+        alpha, l_acc, l_pred = kernel_perceptron(l_features, l_label, l_features, l_label, i+1)
+        l_accs.append(l_acc)
+        alpha, v_acc, v_pred = kernel_perceptron(l_features, l_label, v_features, v_label, i+1)
+        l_accs.append(v_acc)
+    pd.DataFrame(l_accs).to_csv("K_accuracies.csv", header = False)
+    
+
+    alpha, t_acc, t_pred = kernel_perceptron(l_features, l_label, t_features, t_label, p=4, iters=7)
+    pd.DataFrame(t_pred).to_csv("kplabel.csv", header = False, index = False)
