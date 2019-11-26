@@ -7,3 +7,6 @@
 
 ### Implementation Assignment 2
 [Perceptron algorithm for Optical Character Recognition](https://docs.google.com/document/d/1pRnC8mHC4FTOVyHdiVluABBKWEzpiFIUt5_liGe7_gE/edit#)
+
+### Implementation Assignment 3
+[Decision Tree Ensemble for Mushroom Classification](https://docs.google.com/document/d/1NWXVnNdypfmqVrCna-B4KBKeq49LFxfJBPxDIovgk48/edit)
