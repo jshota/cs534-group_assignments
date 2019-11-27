@@ -46,6 +46,7 @@ class DecisionTreeClassifier:
 		self.is_leaf = is_leaf
 		self.prediction = prediction
 
+'''
 	def printTree(self, spacing=""):
 		if self.is_leaf:
 			print(spacing + "Predict", self.prediction)
@@ -55,6 +56,7 @@ class DecisionTreeClassifier:
 		self.left.printTree()
 		print(spacing + '--> False:')
 		self.right.printTree()
+'''
 
 
 def predictLabel(tree, example, currentDepth, maximumDepth):
@@ -260,40 +262,41 @@ def predict(tree_list, alpha_list, data, maxDepth):
     np.savetxt('predictbest.txt', data[:, 0])
 
 
-
-
-
 if __name__ == '__main__':
     trainData = fileRead('pa3_train.csv')
     trainData = changeData(trainData)
-    # validData = fileRead('pa3_val.csv')
-    # validData = changeData(validData)
+    validData = fileRead('pa3_val.csv')
+    validData = changeData(validData)
     testData = fileRead('pa3_test.csv')
     testData = changeTest(testData)
+    train_acc_list = []
+    valid_acc_list = []
+    max_depth = 2
 
     print("!!!!!Executing ADABOOST!!!!!")
-    itr_list = [1, 2, 5, 10, 15]
+    #itr_list = [1, 2, 5, 10, 15]
+    itr_list = [6]
     i = 0
-    for l in [6]:
+    for l in itr_list:
 	    print("``````````````````````For {} Weak-Learners```````````````````````````".format(l))
-	    itr_list.append(l)
-	    tree_list, alpha_list = adaboost(trainData, l, 2)
-	    # train_acc_list.append(treeAccuracy_ada(tree_list, alpha_list, trainData, 2))
-	    # valid_acc_list.append(treeAccuracy_ada(tree_list, alpha_list, validData, 2))
+	    #itr_list.append(l)
+	    tree_list, alpha_list = adaboost(trainData, l, max_depth)
+	    train_acc_list.append(treeAccuracy_ada(tree_list, alpha_list, trainData, max_depth))
+	    valid_acc_list.append(treeAccuracy_ada(tree_list, alpha_list, validData, max_depth))
 	    i = i + 1
-    predict(tree_list, alpha_list, testData, 2)
+    predict(tree_list, alpha_list, testData, max_depth)
     # np.savetxt('predictbest.txt', tree_list)
-    # plt.scatter(itr_list, train_acc_list, color = 'blue', s = 15)
+    # plt.scatter(itr_list, train_acc_list, color = 'blue', s = 5)
     # blue_line, = plt.plot(itr_list, train_acc_list, color = 'blue', label = 'Training Accuracy')
-    # plt.title("AdaBosst Accuracy")
+    # plt.title("AdaBoost Accuracy")
     # plt.xlabel("L")
-    # plt.ylabel("Accuracy Percent")
-    #
-    # plt.scatter(itr_list, valid_acc_list, color = 'red', s = 15)
+    # plt.ylabel("Accuracy")
+    # #
+    # plt.scatter(itr_list, valid_acc_list, color = 'red', s = 5)
     # red_line, = plt.plot(itr_list, valid_acc_list, color = 'red', label = 'Validation Accuracy')
     # plt.legend(handles  = [blue_line, red_line])
     # plt.grid()
-    # plt.savefig("part3.png")
+    # plt.savefig("./part3.png")
     # plt.show()
     # print(train_acc_list)
     # print(valid_acc_list)

@@ -197,16 +197,16 @@ if __name__ == '__main__':
         x_valid, y_valid = read('pa3_val.csv')
 
         d = 2
-        m = 5
-        # ms = [1, 2, 5, 10, 25, 50]
+        #m = 5
+        ms = [1, 2, 5, 10, 25, 50]
 
         n = [1, 2, 5, 10, 25]
-        # n_trees = 15
+        n_trees = 15
         #n=[10]
         train_acc = []
         valid_acc = []
-        for n_trees in n:
-        # for m in ms:
+        #for n_trees in n:
+        for m in ms:
             print('Training data with the number of tress = ', n_trees)
             forest = RandomForestClassifier(n_estimators=n_trees, max_features=m, max_depth=d,
                                             min_samples_split=2, bootstrap=0.1)
@@ -219,16 +219,16 @@ if __name__ == '__main__':
             train_acc.append(100 * train_accuracy)
             valid_acc.append(100 * valid_accuracy)
 
-            # plot
-            # plt.plot(ms, train_acc, 'b', linewidth=1, label="Training_accuracy")
-            # plt.plot(ms, valid_acc, 'r', linewidth=1, label="Valid_accuracy")
-        plt.plot(n, train_acc, 'b', linewidth=1, label="Training_accuracy")
-        plt.plot(n, valid_acc, 'r', linewidth=1, label="Valid_accuracy")
-        # plt.xlabel("m")
-        plt.xlabel("n")
+        # plot
+        plt.plot(ms, train_acc, 'b', linewidth=1, label="Training_accuracy")
+        plt.plot(ms, valid_acc, 'r', linewidth=1, label="Valid_accuracy")
+        #plt.plot(n, train_acc, 'b', linewidth=1, label="Training_accuracy")
+        #plt.plot(n, valid_acc, 'r', linewidth=1, label="Valid_accuracy")
+        plt.xlabel("m")
+        #plt.xlabel("n")
         plt.ylabel("accuracy")
         plt.legend(loc='lower right')
         plt.title("Random_forest")
-        # plt.savefig("pictures/part2_accuracy_ms" + str(i) + ".png")
-        plt.savefig("pictures/part2_accuracy_all" + str(i) + ".png")
-        plt.show()
+        plt.savefig("./pictures/part2_accuracy_ms" + str(i) + ".png")
+        #plt.savefig("./part2_accuracy_all" + str(i) + ".png")
+        #plt.show()
